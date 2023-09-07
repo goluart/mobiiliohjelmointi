@@ -8,21 +8,27 @@ import {
   Alert,
   TextInput,
   Image,
+  FlatList,
 } from "react-native";
 
 export default function App() {
   const [result, setResult] = useState("");
   const [tokaNumero, setTokaNumero] = useState("");
   const [ekaNumero, setEkaNumero] = useState("");
+  const [data, setData] = useState([]);
 
   const addPressed = () => {
     const plus = parseFloat(ekaNumero) + parseFloat(tokaNumero);
+    const calculation = `${ekaNumero} + ${tokaNumero} = ${plus}`;
     setResult(`Result: ${plus}`);
+    setData([...data, { key: calculation }]);
   };
 
   const subtractPressed = () => {
     const minus = parseFloat(ekaNumero) - parseFloat(tokaNumero);
+    const calculation = `${ekaNumero} - ${tokaNumero} = ${minus}`;
     setResult(`Result: ${minus}`);
+    setData([...data, { key: calculation }]);
   };
 
   return (
@@ -41,11 +47,17 @@ export default function App() {
         value={tokaNumero}
       />
       <View style={styles.buttonContainer}>
-      <Button onPress={addPressed} title="+" />
-      <View style={styles.buttonGap} />
-      <Button onPress={subtractPressed} title="-" />
+        <Button onPress={addPressed} title="+" />
+        <View style={styles.buttonGap} />
+        <Button onPress={subtractPressed} title="-" />
       </View>
       <StatusBar style="auto" />
+      {data.length > 0 && <Text style={styles.historyHeader}>History</Text>}
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <Text>{item.key}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
   );
 }
